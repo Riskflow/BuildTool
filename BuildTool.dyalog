@@ -23,6 +23,11 @@
     :Field Private suppress_output    ← 0
 
 
+    ∇ r←Version
+      :Access Public Shared
+      r←({⍵/⍨⌽~∨\⌽⍵∊'.'}⍕⎕THIS)'1.0.0' '2018-03-02'
+    ∇
+
     ∇ make0
       :Access Public
       :Implements Constructor
@@ -268,14 +273,14 @@
       ⍝ Function performs a build based of the paramters previousely set.
       ⍝ Returns boolean indicator of success as a shy result.
       :Trap 0
-          LogBuild'build started at: ',FmtTS
+          LogBuild'build started at: ',FmtTS ⎕TS
           CreateBuildDir
           SetLX
           DoCompile
           CreateExport
           AddAdditionalFiles
           ResetLX
-          LogBuild'build complete ',FmtTS
+          LogBuild'build complete ',FmtTS ⎕TS
           success←1
       :Else
           HandleError
@@ -336,7 +341,7 @@
     ∇
 
     ∇ CreateBuildDir;build_dir;rsp
-      export_dir←RepBSl base_dir,export_name,' ',FmtTS,'/'
+      export_dir←RepBSl base_dir,export_name,' ',(FmtTS ⎕TS),'/'
       rsp←⎕MKDIR export_dir
       :If rsp
           LogBuild'created: ',export_dir
@@ -469,15 +474,27 @@
 
     :Section Utils
 
-    RemBS←{(~⌽∧\' '=⌽⍵)/⍵}
+      RemBS←{               ⍝ Remove Back Spaces (trailing blanks)
+          (~⌽∧\' '=⌽⍵)/⍵
+      }
 
-    RepBSl←{('\\'⎕R'/')⍵}
+      RepBSl←{              ⍝ Replace Back Slash
+          ('\\'⎕R'/')⍵
+      }
 
-    ∇ ts←FmtTS;time;date
-      date←{1↓∊'-',¨(-4 2 2)↑¨'0',¨⍕¨3↑⍵}⎕TS
-      time←{1↓⊃,/'.',∘⍕¨3↑3↓⍵}⎕TS
-      ts←date,' ',time
-    ∇
+      FmtTS←{               ⍝ Format Time Stamp
+          len←3⌈7⌊⍴⍵        ⍝ restrict the length
+          ⍺←'-- ::.'        ⍝ defualt seperators
+          _fmtstatment←{    ⍝ create a format statement
+              _do←{
+                  '⍬'∊⍺:',ZI',⍕⍵ ⋄ ',<',⍺,'>,ZI',⍕⍵
+              }
+              1↓⊃,/('⍬',⍺)_do¨⍵  ⍝ the first is always the year
+          }
+          size←4 2 2 2 2 2 3
+          fmt←(⍺↑⍨len-1)_fmtstatment len↑size
+          fmt ⎕FMT⍉⍪len↑⍵
+      }
 
       CommaAndList←{
           1=⍴,⊆⍵:⍵
