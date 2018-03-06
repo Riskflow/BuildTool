@@ -341,7 +341,7 @@
     ∇
 
     ∇ CreateBuildDir;build_dir;rsp
-      export_dir←RepBSl base_dir,export_name,' ',(FmtTS ⎕TS),'/'
+      export_dir←RepBSl base_dir,export_name,' ',('--_---'FmtTS ⎕TS),'/'
       rsp←⎕MKDIR export_dir
       :If rsp
           LogBuild'created: ',export_dir
@@ -493,7 +493,7 @@
           }
           size←4 2 2 2 2 2 3
           fmt←(⍺↑⍨len-1)_fmtstatment len↑size
-          fmt ⎕FMT⍉⍪len↑⍵
+          ,fmt ⎕FMT⍉⍪len↑⍵
       }
 
       CommaAndList←{
