@@ -212,7 +212,7 @@
       r←⍴vec
     ∇
 
-    ∇ success←Test_DLL_001;DLL;name;⎕USING;DYALOG
+    ∇ success←Test_DLL_001;DLL;name;⎕USING;DYALOG;using
       name←⊃⎕SI
     ⍝ Test .NET .dll
       :With DLL←⎕NEW ##.BuildTool name
@@ -221,7 +221,10 @@
           BaseDir←##.base_dir
           Flags←8
           success←Run
-      :EndWith
+      :EndWith     
+      using←⊃,/  DLL.(ExportDir ExportName)
+      ⎕USING←using
+
     ∇
     ∇ success←Test_DLL_002;DLL;name;⎕USING;DYALOG
       name←⊃⎕SI
