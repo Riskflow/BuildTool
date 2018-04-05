@@ -25,7 +25,12 @@
 
     ∇ r←Version
       :Access Public Shared
-      r←({⍵/⍨⌽~∨\⌽⍵∊'.'}⍕⎕THIS)'1.0.0' '2018-03-02'
+      ⍝ Changes since previouse versions:
+      ⍝ 1.0.1
+      ⍝     * Reset ⎕LX is move before AddAddionalFiles
+      ⍝       so that when a copy of the ws is saved it
+      ⍝       is saved without the ⎕LX
+      r←({⍵/⍨⌽~∨\⌽⍵∊'.'}⍕⎕THIS)'1.0.1' '2018-04-05'
     ∇
 
     ∇ make0
@@ -278,8 +283,8 @@
           SetLX
           DoCompile
           CreateExport
-          AddAdditionalFiles
           ResetLX
+          AddAdditionalFiles
           LogBuild'build complete ',FmtTS ⎕TS
           success←1
       :Else
